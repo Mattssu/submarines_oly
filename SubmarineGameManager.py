@@ -1,6 +1,9 @@
 import Submarine
 
 GAME_SIZE = 10
+MISS = "MISS"
+HIT = "HIT"
+SINK = "SINK"
 
 
 class SubmarineGame:
@@ -9,6 +12,7 @@ class SubmarineGame:
         self.game_map_size = GAME_SIZE
         self.init_map()
         self.submarines = []
+        self.hit_locations = []
 
     def init_map(self):
         for row in range(self.game_map_size):
@@ -83,11 +87,37 @@ class SubmarineGame:
         for line in drawing:
             print(line)
 
-    def bomb_location(self, location):
-        pass
+    def bomb_a_location(self, location):
+        if location in self.hit_locations:
+            return MISS
+
+        col, row = location
+
+        if not (self.is_within_range(col) and self.is_within_range(row)):
+            return MISS
+
+        if self.game_map[row][col] != "O" and self.game_map[row][col] != "X":
+            hit_submarine = self.game_map[row][col]
+            hit_submarine.hit_location(location)
+            self.hit_locations.append(location)
+            self.game_map[row][col] = "X"
+            if hit_submarine.is_sink():
+                self.submarines.remove(hit_submarine)
+                return SINK
+            else:
+                return HIT
+        return MISS
 
 
-sub = SubmarineGame()
-sub.init_submarine_locations()
-sub.draw_game()
-print("Test")
+def local_test_func():
+    sub = SubmarineGame()
+    sub.init_submarine_locations()
+    sub.draw_game()
+    while True:
+        x = int(input("Insert x"))
+        y = int(input("Insert y"))
+        print(sub.bomb_a_location((x, y)))
+        sub.draw_game()
+
+
+local_test_func()
