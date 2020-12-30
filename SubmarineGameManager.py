@@ -4,6 +4,7 @@ GAME_SIZE = 10
 MISS = "MISS"
 HIT = "HIT"
 SINK = "SINK"
+END_GAME = "GG"
 
 
 class SubmarineGame:
@@ -71,8 +72,7 @@ class SubmarineGame:
             self.place_submarine_on_board(5)
             print("Placed")
         except KeyError:
-            pass
-        # TODO sanity checks
+            pass  # TODO Test
 
     def draw_game(self):
         drawing = []
@@ -103,21 +103,9 @@ class SubmarineGame:
             self.game_map[row][col] = "X"
             if hit_submarine.is_sink():
                 self.submarines.remove(hit_submarine)
+                if len(self.submarines) == 0:
+                    return END_GAME
                 return SINK
             else:
                 return HIT
         return MISS
-
-
-def local_test_func():
-    sub = SubmarineGame()
-    sub.init_submarine_locations()
-    sub.draw_game()
-    while True:
-        x = int(input("Insert x"))
-        y = int(input("Insert y"))
-        print(sub.bomb_a_location((x, y)))
-        sub.draw_game()
-
-
-local_test_func()
