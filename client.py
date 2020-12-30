@@ -16,9 +16,16 @@ def user_bomb_input():
 
 
 def client_connect(submarine_game):
+    try:
+        host = input("Insert ip to connect to :")  # TODO check input
+        if len(host.split(".")) != 4:
+            raise ValueError
+    except ValueError:
+        print("Wrong IP format")
+
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         # Connect to server and send data
-        sock.connect((HOST, PORT))
+        sock.connect((host, PORT))
         # SYNC PART
         received = str(sock.recv(1024), "utf-8")
         print("Received: {}".format(received))
