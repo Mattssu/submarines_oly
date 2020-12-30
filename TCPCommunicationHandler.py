@@ -33,31 +33,37 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         if str(self.data, "utf-8") == RESPONSE_SYNC:
             print("SYNCED")
 
-            while self.data != "GG":
+            while self.data != b"GG":
+                # SEND BOMB
                 self.user_bomb_input()
                 self.data = (bytes(self.data, "utf-8"))
                 self.request.sendall(self.data.upper())
-
+                print("Sent BOMB")
+                print(str(self.data, "utf-8"))
+                # WAIT FOR RESPONSE
                 self.data = self.request.recv(1024).strip()
-
-                if self.data == "MISS":
-                    while self.data != "GG":
-
+                print("RECEIVED RESPONSE")
+                print(str(self.data, "utf-8"))
+                # IF MISS THEN WAIT TURN ELSE CONTINUE
+                if self.data == b"MISS":
+                    while self.data != b"GG":
+                        # WAIT FOR BOMB
                         self.data = self.request.recv(1024).strip()
-                        print(self.data)
-
+                        print("GOT BOMBED")
+                        print(str(self.data, "utf-8"))
+                        # RESPOND
                         self.data = (bytes(random_answer(), "utf-8"))
                         self.request.sendall(self.data)
 
-                        if self.data == "MISS":
+                        print("SENT RESPONSE")
+                        print(str(self.data, "utf-8"))
+                        # IF RESPONSE WAS MISS THEN ITS MY TURN
+                        if self.data == b"MISS":
                             break
-
-                        # if b"gg" == self.data or b"GG" == self.data:
-                        # TODO TEST the thing
 
 
 def random_answer():
-    bank = ["MISS", "MISS", "MISS", "HIT", "SINK"]
+    bank = ["GG", "GG", "GG", "GG", "GG"]
     index = random.randint(0, 4)
     return bank[index]
 
