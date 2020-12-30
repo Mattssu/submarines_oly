@@ -77,21 +77,3 @@ def client_connect(submarine_game):
                         break
 
     sock.close()
-
-
-def client_sync_demo():
-    try:
-        host = input("Insert ip to connect to :")
-        if len(host.split(".")) != 4:
-            raise ValueError
-    except ValueError:
-        print("Wrong IP format")
-
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        # Connect to server and send data
-        sock.connect((host, PORT))
-        # SYNC PART
-        received = str(sock.recv(1024), "utf-8")
-        print("Received: {}".format(received))
-        if received[3:] == START_SYNC:
-            sock.sendall(bytes(format_message(RESPONSE_SYNC), "utf-8"))
