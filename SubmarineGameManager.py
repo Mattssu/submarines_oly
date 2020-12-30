@@ -70,6 +70,10 @@ class SubmarineGame:
     def init_submarine_locations(self):
         try:
             self.place_submarine_on_board(5)
+            self.place_submarine_on_board(4)
+            self.place_submarine_on_board(3)
+            self.place_submarine_on_board(3)
+            self.place_submarine_on_board(2)
             print("Placed")
         except KeyError:
             pass  # TODO Test
